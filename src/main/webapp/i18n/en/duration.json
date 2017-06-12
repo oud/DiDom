@@ -1,0 +1,12 @@
+{
+    "diDomApp": {
+        "Duration" : {
+            "null": "",
+            "1_HOUR": "1_HOUR",
+            "2_5_HOURS": "2_5_HOURS",
+            "1_DAY": "1_DAY",
+            "2_5_DAYS": "2_5_DAYS",
+            "1_MONTH": "1_MONTH"
+        }
+    }
+}

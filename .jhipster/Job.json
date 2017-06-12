@@ -1,0 +1,54 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "mainSkill",
+            "otherEntityName": "skill",
+            "otherEntityField": "skillName"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "login"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "proposal",
+            "otherEntityName": "proposal",
+            "otherEntityRelationshipName": "job"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "startDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "duration",
+            "fieldType": "Duration",
+            "fieldValues": "1_HOUR,2_5_HOURS,1_DAY,2_5_DAYS,1_MONTH"
+        }
+    ],
+    "changelogDate": "20170612100140",
+    "entityTableName": "job",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "serviceClass",
+    "searchEngine": "elasticsearch"
+}

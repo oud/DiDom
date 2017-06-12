@@ -43,6 +43,23 @@ public class CacheConfiguration {
             cm.createCache(com.didom.myapp.domain.PersistentToken.class.getName(), jcacheConfiguration);
             cm.createCache(com.didom.myapp.domain.User.class.getName() + ".persistentTokens", jcacheConfiguration);
             cm.createCache(com.didom.myapp.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.UserInfo.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Skill.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Skill.class.getName() + ".jobs", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.HasSkill.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Job.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Job.class.getName() + ".proposals", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Location.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Country.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Proposal.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Proposal.class.getName() + ".messages", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Proposal.class.getName() + ".contracts", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Message.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Message.class.getName() + ".users", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Message.class.getName() + ".attachments", jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Attachment.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Contract.class.getName(), jcacheConfiguration);
+            cm.createCache(com.didom.myapp.domain.Contract.class.getName() + ".users", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

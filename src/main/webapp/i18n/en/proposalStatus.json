@@ -1,0 +1,12 @@
+{
+    "diDomApp": {
+        "ProposalStatus" : {
+            "null": "",
+            "SENT": "SENT",
+            "ACCEPTED": "ACCEPTED",
+            "REJECTED": "REJECTED",
+            "STARTED": "STARTED",
+            "FINISHED": "FINISHED"
+        }
+    }
+}

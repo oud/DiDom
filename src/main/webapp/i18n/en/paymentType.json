@@ -1,0 +1,9 @@
+{
+    "diDomApp": {
+        "PaymentType" : {
+            "null": "",
+            "PER_HOUR": "PER_HOUR",
+            "FIXED_PRICE": "FIXED_PRICE"
+        }
+    }
+}
