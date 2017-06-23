@@ -4,6 +4,7 @@ import com.didom.myapp.DiDomApp;
 
 import com.didom.myapp.domain.Job;
 import com.didom.myapp.repository.JobRepository;
+import com.didom.myapp.repository.UserInfoRepository;
 import com.didom.myapp.service.JobService;
 import com.didom.myapp.repository.search.JobSearchRepository;
 import com.didom.myapp.service.ProposalService;
@@ -80,11 +81,12 @@ public class JobResourceIntTest {
 
     private Job job;
     private ProposalService proposalService;
+    private  UserInfoRepository userInfoRepository;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        JobResource jobResource = new JobResource(jobService, proposalService);
+        JobResource jobResource = new JobResource(jobService, proposalService,userInfoRepository);
         this.restJobMockMvc = MockMvcBuilders.standaloneSetup(jobResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
