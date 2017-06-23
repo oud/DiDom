@@ -1,8 +1,14 @@
 package com.didom.myapp.service;
 
+import com.didom.myapp.domain.Authority;
 import com.didom.myapp.domain.Proposal;
+import com.didom.myapp.domain.User;
+import com.didom.myapp.repository.AuthorityRepository;
 import com.didom.myapp.repository.ProposalRepository;
+import com.didom.myapp.repository.UserRepository;
 import com.didom.myapp.repository.search.ProposalSearchRepository;
+import com.didom.myapp.security.AuthoritiesConstants;
+import com.didom.myapp.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -22,14 +28,20 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class ProposalService {
 
     private final Logger log = LoggerFactory.getLogger(ProposalService.class);
-    
+
     private final ProposalRepository proposalRepository;
 
     private final ProposalSearchRepository proposalSearchRepository;
 
-    public ProposalService(ProposalRepository proposalRepository, ProposalSearchRepository proposalSearchRepository) {
+    private final AuthorityRepository authorityRepository;
+
+    private final UserRepository userRepository;
+
+    public ProposalService(ProposalRepository proposalRepository, ProposalSearchRepository proposalSearchRepository, AuthorityRepository authorityRepository, UserRepository userRepository) {
         this.proposalRepository = proposalRepository;
         this.proposalSearchRepository = proposalSearchRepository;
+        this.authorityRepository = authorityRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -40,6 +52,9 @@ public class ProposalService {
      */
     public Proposal save(Proposal proposal) {
         log.debug("Request to save Proposal : {}", proposal);
+        Optional<User> user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        Authority candidateAuthority = authorityRepository.findOne(AuthoritiesConstants.CANDIDATE);
+        if (user.isPresent() && user.get().getAuthorities().contains(candidateAuthority)) proposal.setUser(user.get());
         Proposal result = proposalRepository.save(proposal);
         proposalSearchRepository.save(result);
         return result;
@@ -47,7 +62,7 @@ public class ProposalService {
 
     /**
      *  Get all the proposals.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
