@@ -1,8 +1,11 @@
 package com.didom.myapp.service;
 
 import com.didom.myapp.domain.HasSkill;
+import com.didom.myapp.domain.User;
 import com.didom.myapp.repository.HasSkillRepository;
+import com.didom.myapp.repository.UserRepository;
 import com.didom.myapp.repository.search.HasSkillSearchRepository;
+import com.didom.myapp.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -22,14 +26,16 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class HasSkillService {
 
     private final Logger log = LoggerFactory.getLogger(HasSkillService.class);
-    
+
     private final HasSkillRepository hasSkillRepository;
 
     private final HasSkillSearchRepository hasSkillSearchRepository;
+    private final UserRepository userRepository;
 
-    public HasSkillService(HasSkillRepository hasSkillRepository, HasSkillSearchRepository hasSkillSearchRepository) {
+    public HasSkillService(HasSkillRepository hasSkillRepository, HasSkillSearchRepository hasSkillSearchRepository, UserRepository userRepository) {
         this.hasSkillRepository = hasSkillRepository;
         this.hasSkillSearchRepository = hasSkillSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -40,6 +46,8 @@ public class HasSkillService {
      */
     public HasSkill save(HasSkill hasSkill) {
         log.debug("Request to save HasSkill : {}", hasSkill);
+        Optional<User> user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        if (user.isPresent()) hasSkill.setUser(user.get());
         HasSkill result = hasSkillRepository.save(hasSkill);
         hasSkillSearchRepository.save(result);
         return result;
@@ -47,7 +55,7 @@ public class HasSkillService {
 
     /**
      *  Get all the hasSkills.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -55,6 +63,7 @@ public class HasSkillService {
     public Page<HasSkill> findAll(Pageable pageable) {
         log.debug("Request to get all HasSkills");
         Page<HasSkill> result = hasSkillRepository.findAll(pageable);
+        //List<HasSkill> result = hasSkillRepository.findByUserIsCurrentUser();
         return result;
     }
 

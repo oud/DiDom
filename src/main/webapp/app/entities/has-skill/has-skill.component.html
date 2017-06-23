@@ -32,7 +32,7 @@
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="paymentType"><span jhiTranslate="diDomApp.hasSkill.paymentType">Payment Type</span> <span class="fa fa-sort"></span></th>
             <th jhiSortBy="paymentAmont"><span jhiTranslate="diDomApp.hasSkill.paymentAmont">Payment Amont</span> <span class="fa fa-sort"></span></th>
-            <th jhiSortBy="user.login"><span jhiTranslate="diDomApp.hasSkill.user">User</span> <span class="fa fa-sort"></span></th>
+            <!--th jhiSortBy="user.login"><span jhiTranslate="diDomApp.hasSkill.user">User</span> <span class="fa fa-sort"></span></th-->
             <th jhiSortBy="skill.skillName"><span jhiTranslate="diDomApp.hasSkill.skill">Skill</span> <span class="fa fa-sort"></span></th>
             <th></th>
             </tr>
@@ -42,9 +42,9 @@
                 <td><a [routerLink]="['../has-skill', hasSkill.id ]">{{hasSkill.id}}</a></td>
                 <td jhiTranslate="{{'diDomApp.PaymentType.' + hasSkill.paymentType}}">{{hasSkill.paymentType}}</td>
                 <td>{{hasSkill.paymentAmont}}</td>
-                <td>
+                <!--td>
                     {{hasSkill.user?.login}}
-                </td>
+                </td-->
                 <td>
                     <div *ngIf="hasSkill.skill">
                         <a [routerLink]="['../skill', hasSkill.skill?.id ]" >{{hasSkill.skill?.skillName}}</a>

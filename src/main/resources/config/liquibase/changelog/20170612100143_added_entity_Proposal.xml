@@ -27,11 +27,11 @@
             </column>
 
             <column name="payment_type" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="payment_amount" type="decimal(10,2)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
 
             <column name="current_proposal_status" type="varchar(255)">

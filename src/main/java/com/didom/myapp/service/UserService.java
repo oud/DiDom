@@ -2,10 +2,14 @@ package com.didom.myapp.service;
 
 import com.didom.myapp.domain.Authority;
 import com.didom.myapp.domain.User;
+import com.didom.myapp.domain.UserInfo;
+import com.didom.myapp.domain.enumeration.TypeUser;
 import com.didom.myapp.repository.AuthorityRepository;
 import com.didom.myapp.repository.PersistentTokenRepository;
 import com.didom.myapp.config.Constants;
+import com.didom.myapp.repository.UserInfoRepository;
 import com.didom.myapp.repository.UserRepository;
+import com.didom.myapp.repository.search.UserInfoSearchRepository;
 import com.didom.myapp.repository.search.UserSearchRepository;
 import com.didom.myapp.security.AuthoritiesConstants;
 import com.didom.myapp.security.SecurityUtils;
@@ -48,13 +52,19 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository) {
+    private UserInfoRepository userInfoRepository;
+
+    private UserInfoSearchRepository userInfoSearchRepository;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, SocialService socialService, UserSearchRepository userSearchRepository, PersistentTokenRepository persistentTokenRepository, AuthorityRepository authorityRepository, UserInfoRepository userInfoRepository, UserInfoSearchRepository userInfoSearchRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.socialService = socialService;
         this.userSearchRepository = userSearchRepository;
         this.persistentTokenRepository = persistentTokenRepository;
         this.authorityRepository = authorityRepository;
+        this.userInfoRepository = userInfoRepository;
+        this.userInfoSearchRepository = userInfoSearchRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -94,7 +104,7 @@ public class UserService {
     }
 
     public User createUser(String login, String password, String firstName, String lastName, String email,
-        String imageUrl, String langKey) {
+                           String imageUrl, String langKey, TypeUser userType) {
 
         User newUser = new User();
         Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
@@ -113,10 +123,29 @@ public class UserService {
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         authorities.add(authority);
+
+        if (userType.equals(TypeUser.RECRUITER)){
+                Authority reg_authority = authorityRepository.findOne(AuthoritiesConstants.RECRUITER);
+                authorities.add(reg_authority);
+            }
+        if (userType.equals(TypeUser.CANDIDATE)){
+                Authority reg_authority = authorityRepository.findOne(AuthoritiesConstants.CANDIDATE);
+                authorities.add(reg_authority);
+            }
+
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
+
+        UserInfo newUserInfo = new UserInfo();
+        newUserInfo.setUser(newUser);
+        newUserInfo.setUserType(userType);
+        newUserInfo.setAvailability(Boolean.TRUE);
+        userInfoRepository.save(newUserInfo);
+        userInfoSearchRepository.save(newUserInfo);
+        log.debug("Created Information for UserInfo: {}", newUserInfo);
+
         return newUser;
     }
 

@@ -17,9 +17,9 @@
                 "title": "Job"
             },
             "title": "Title",
-            "description": "Description",
             "startDate": "Start Date",
             "duration": "Duration",
+            "description": "Description",
             "mainSkill": "Main Skill",
             "user": "User",
             "proposal": "Proposal"

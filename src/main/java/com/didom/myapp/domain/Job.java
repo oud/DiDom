@@ -34,16 +34,18 @@ public class Job implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @NotNull
-    @Column(name = "description", nullable = false)
-    private String description;
-
     @Column(name = "start_date")
     private LocalDate startDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "duration")
     private Duration duration;
+
+    @NotNull
+    @Size(max = 200)
+    @Lob
+    @Column(name = "description", length = 200, nullable = false)
+    private String description;
 
     @ManyToOne
     private Skill mainSkill;
@@ -77,19 +79,6 @@ public class Job implements Serializable {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Job description(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -114,6 +103,19 @@ public class Job implements Serializable {
 
     public void setDuration(Duration duration) {
         this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Job description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Skill getMainSkill() {
@@ -192,9 +194,9 @@ public class Job implements Serializable {
         return "Job{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
-            ", description='" + getDescription() + "'" +
             ", startDate='" + getStartDate() + "'" +
             ", duration='" + getDuration() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

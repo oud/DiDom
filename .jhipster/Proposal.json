@@ -37,17 +37,11 @@
         {
             "fieldName": "paymentType",
             "fieldType": "PaymentType",
-            "fieldValues": "PER_HOUR,FIXED_PRICE",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldValues": "PER_HOUR,FIXED_PRICE"
         },
         {
             "fieldName": "paymentAmount",
-            "fieldType": "BigDecimal",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "BigDecimal"
         },
         {
             "fieldName": "currentProposalStatus",

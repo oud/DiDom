@@ -6,6 +6,7 @@ import com.didom.myapp.domain.Job;
 import com.didom.myapp.repository.JobRepository;
 import com.didom.myapp.service.JobService;
 import com.didom.myapp.repository.search.JobSearchRepository;
+import com.didom.myapp.service.ProposalService;
 import com.didom.myapp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -45,14 +46,14 @@ public class JobResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
-    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
-
     private static final LocalDate DEFAULT_START_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_START_DATE = LocalDate.now(ZoneId.systemDefault());
 
-    private static final Duration DEFAULT_DURATION = Duration.1_HOUR;
-    private static final Duration UPDATED_DURATION = Duration.2_5_HOURS;
+    private static final Duration DEFAULT_DURATION = Duration.ONE_HOUR;
+    private static final Duration UPDATED_DURATION = Duration.TWOtoFIVE_HOURS;
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     @Autowired
     private JobRepository jobRepository;
@@ -78,11 +79,12 @@ public class JobResourceIntTest {
     private MockMvc restJobMockMvc;
 
     private Job job;
+    private ProposalService proposalService;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        JobResource jobResource = new JobResource(jobService);
+        JobResource jobResource = new JobResource(jobService, proposalService);
         this.restJobMockMvc = MockMvcBuilders.standaloneSetup(jobResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -98,9 +100,9 @@ public class JobResourceIntTest {
     public static Job createEntity(EntityManager em) {
         Job job = new Job()
             .title(DEFAULT_TITLE)
-            .description(DEFAULT_DESCRIPTION)
             .startDate(DEFAULT_START_DATE)
-            .duration(DEFAULT_DURATION);
+            .duration(DEFAULT_DURATION)
+            .description(DEFAULT_DESCRIPTION);
         return job;
     }
 
@@ -126,9 +128,9 @@ public class JobResourceIntTest {
         assertThat(jobList).hasSize(databaseSizeBeforeCreate + 1);
         Job testJob = jobList.get(jobList.size() - 1);
         assertThat(testJob.getTitle()).isEqualTo(DEFAULT_TITLE);
-        assertThat(testJob.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testJob.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testJob.getDuration()).isEqualTo(DEFAULT_DURATION);
+        assertThat(testJob.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
 
         // Validate the Job in Elasticsearch
         Job jobEs = jobSearchRepository.findOne(testJob.getId());
@@ -202,9 +204,9 @@ public class JobResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(job.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
-            .andExpect(jsonPath("$.[*].duration").value(hasItem(DEFAULT_DURATION.toString())));
+            .andExpect(jsonPath("$.[*].duration").value(hasItem(DEFAULT_DURATION.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
 
     @Test
@@ -219,9 +221,9 @@ public class JobResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(job.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
-            .andExpect(jsonPath("$.duration").value(DEFAULT_DURATION.toString()));
+            .andExpect(jsonPath("$.duration").value(DEFAULT_DURATION.toString()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
     @Test
@@ -244,9 +246,9 @@ public class JobResourceIntTest {
         Job updatedJob = jobRepository.findOne(job.getId());
         updatedJob
             .title(UPDATED_TITLE)
-            .description(UPDATED_DESCRIPTION)
             .startDate(UPDATED_START_DATE)
-            .duration(UPDATED_DURATION);
+            .duration(UPDATED_DURATION)
+            .description(UPDATED_DESCRIPTION);
 
         restJobMockMvc.perform(put("/api/jobs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -258,9 +260,9 @@ public class JobResourceIntTest {
         assertThat(jobList).hasSize(databaseSizeBeforeUpdate);
         Job testJob = jobList.get(jobList.size() - 1);
         assertThat(testJob.getTitle()).isEqualTo(UPDATED_TITLE);
-        assertThat(testJob.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testJob.getStartDate()).isEqualTo(UPDATED_START_DATE);
         assertThat(testJob.getDuration()).isEqualTo(UPDATED_DURATION);
+        assertThat(testJob.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
 
         // Validate the Job in Elasticsearch
         Job jobEs = jobSearchRepository.findOne(testJob.getId());
@@ -319,9 +321,9 @@ public class JobResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(job.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
-            .andExpect(jsonPath("$.[*].duration").value(hasItem(DEFAULT_DURATION.toString())));
+            .andExpect(jsonPath("$.[*].duration").value(hasItem(DEFAULT_DURATION.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
 
     @Test

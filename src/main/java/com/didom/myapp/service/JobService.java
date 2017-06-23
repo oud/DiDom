@@ -1,8 +1,11 @@
 package com.didom.myapp.service;
 
 import com.didom.myapp.domain.Job;
+import com.didom.myapp.domain.User;
 import com.didom.myapp.repository.JobRepository;
+import com.didom.myapp.repository.UserRepository;
 import com.didom.myapp.repository.search.JobSearchRepository;
+import com.didom.myapp.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -22,14 +26,17 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class JobService {
 
     private final Logger log = LoggerFactory.getLogger(JobService.class);
-    
+
     private final JobRepository jobRepository;
 
     private final JobSearchRepository jobSearchRepository;
 
-    public JobService(JobRepository jobRepository, JobSearchRepository jobSearchRepository) {
+    private final UserRepository userRepository;
+
+    public JobService(JobRepository jobRepository, JobSearchRepository jobSearchRepository, UserRepository userRepository) {
         this.jobRepository = jobRepository;
         this.jobSearchRepository = jobSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -40,6 +47,8 @@ public class JobService {
      */
     public Job save(Job job) {
         log.debug("Request to save Job : {}", job);
+        Optional<User> user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
+        if (user.isPresent()) job.setUser(user.get());
         Job result = jobRepository.save(job);
         jobSearchRepository.save(result);
         return result;
@@ -47,7 +56,7 @@ public class JobService {
 
     /**
      *  Get all the jobs.
-     *  
+     *
      *  @param pageable the pagination information
      *  @return the list of entities
      */
@@ -55,6 +64,7 @@ public class JobService {
     public Page<Job> findAll(Pageable pageable) {
         log.debug("Request to get all Jobs");
         Page<Job> result = jobRepository.findAll(pageable);
+        //List<Job> result = jobRepository.findByUserIsCurrentUser();
         return result;
     }
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { EventManager  } from 'ng-jhipster';
+import { EventManager , DataUtils } from 'ng-jhipster';
 
 import { Job } from './job.model';
 import { JobService } from './job.service';
@@ -18,6 +18,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
 
     constructor(
         private eventManager: EventManager,
+        private dataUtils: DataUtils,
         private jobService: JobService,
         private route: ActivatedRoute
     ) {
@@ -34,6 +35,13 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         this.jobService.find(id).subscribe((job) => {
             this.job = job;
         });
+    }
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
     }
     previousState() {
         window.history.back();

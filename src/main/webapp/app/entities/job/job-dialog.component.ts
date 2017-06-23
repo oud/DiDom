@@ -4,7 +4,7 @@ import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 import { NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventManager, AlertService } from 'ng-jhipster';
+import { EventManager, AlertService, DataUtils } from 'ng-jhipster';
 
 import { Job } from './job.model';
 import { JobPopupService } from './job-popup.service';
@@ -30,6 +30,7 @@ export class JobDialogComponent implements OnInit {
 
     constructor(
         public activeModal: NgbActiveModal,
+        private dataUtils: DataUtils,
         private alertService: AlertService,
         private jobService: JobService,
         private skillService: SkillService,
@@ -45,6 +46,26 @@ export class JobDialogComponent implements OnInit {
             .subscribe((res: ResponseWrapper) => { this.skills = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
         this.userService.query()
             .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+    }
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
+    }
+
+    setFileData(event, job, field, isImage) {
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            if (isImage && !/^image\//.test(file.type)) {
+                return;
+            }
+            this.dataUtils.toBase64(file, (base64Data) => {
+                job[field] = base64Data;
+                job[`${field}ContentType`] = file.type;
+            });
+        }
     }
     clear() {
         this.activeModal.dismiss('cancel');

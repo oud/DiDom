@@ -37,13 +37,11 @@ public class Proposal implements Serializable {
     @Column(name = "proposal_time", nullable = false)
     private ZonedDateTime proposalTime;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false)
+    @Column(name = "payment_type")
     private PaymentType paymentType;
 
-    @NotNull
-    @Column(name = "payment_amount", precision=10, scale=2, nullable = false)
+    @Column(name = "payment_amount", precision=10, scale=2)
     private BigDecimal paymentAmount;
 
     @NotNull

@@ -29,13 +29,6 @@
             ]
         },
         {
-            "fieldName": "description",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "startDate",
             "fieldType": "LocalDate"
         },
@@ -43,12 +36,21 @@
             "fieldName": "duration",
             "fieldType": "Duration",
             "fieldValues": "1_HOUR,2_5_HOURS,1_DAY,2_5_DAYS,1_MONTH"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "200"
         }
     ],
     "changelogDate": "20170612100140",
-    "entityTableName": "job",
     "dto": "no",
-    "pagination": "infinite-scroll",
     "service": "serviceClass",
-    "searchEngine": "elasticsearch"
+    "entityTableName": "job",
+    "pagination": "infinite-scroll"
 }

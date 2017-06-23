@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService } from 'ng-jhipster';
+import { EventManager, ParseLinks, PaginationUtil, JhiLanguageService, AlertService, DataUtils } from 'ng-jhipster';
 
 import { Job } from './job.model';
 import { JobService } from './job.service';
@@ -29,6 +29,7 @@ export class JobComponent implements OnInit, OnDestroy {
     constructor(
         private jobService: JobService,
         private alertService: AlertService,
+        private dataUtils: DataUtils,
         private eventManager: EventManager,
         private parseLinks: ParseLinks,
         private activatedRoute: ActivatedRoute,
@@ -119,6 +120,14 @@ export class JobComponent implements OnInit, OnDestroy {
 
     trackId(index: number, item: Job) {
         return item.id;
+    }
+
+    byteSize(field) {
+        return this.dataUtils.byteSize(field);
+    }
+
+    openFile(contentType, field) {
+        return this.dataUtils.openFile(contentType, field);
     }
     registerChangeInJobs() {
         this.eventSubscriber = this.eventManager.subscribe('jobListModification', (response) => this.reset());

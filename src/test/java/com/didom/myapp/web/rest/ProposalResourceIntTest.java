@@ -199,42 +199,6 @@ public class ProposalResourceIntTest {
 
     @Test
     @Transactional
-    public void checkPaymentTypeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = proposalRepository.findAll().size();
-        // set the field null
-        proposal.setPaymentType(null);
-
-        // Create the Proposal, which fails.
-
-        restProposalMockMvc.perform(post("/api/proposals")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proposal)))
-            .andExpect(status().isBadRequest());
-
-        List<Proposal> proposalList = proposalRepository.findAll();
-        assertThat(proposalList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkPaymentAmountIsRequired() throws Exception {
-        int databaseSizeBeforeTest = proposalRepository.findAll().size();
-        // set the field null
-        proposal.setPaymentAmount(null);
-
-        // Create the Proposal, which fails.
-
-        restProposalMockMvc.perform(post("/api/proposals")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(proposal)))
-            .andExpect(status().isBadRequest());
-
-        List<Proposal> proposalList = proposalRepository.findAll();
-        assertThat(proposalList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkCurrentProposalStatusIsRequired() throws Exception {
         int databaseSizeBeforeTest = proposalRepository.findAll().size();
         // set the field null
