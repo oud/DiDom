@@ -7,10 +7,7 @@ entity Message {
     
 }
 
-
 enum Status {
 	RECEIVED, WAITING, COMPLETED, ERROR
 }
 
-
-service * with serviceClass
