@@ -1,0 +1,32 @@
+application {
+  config {
+    baseName app
+    packageName com.test
+    authenticationType jwt
+    cacheProvider ehcache
+    devDatabaseType	h2Disk
+    prodDatabaseType postgresql
+    buildTool maven
+    clientFramework angular
+    nativeLanguage en
+    enableTranslation false
+  }
+  entities *
+}
+
+entity Message {    
+    Priority Integer
+    Topic String
+    Data String
+    Status Status
+    ReceivedAt LocalDate
+    
+}
+
+
+enum Status {
+	RECEIVED, WAITING, COMPLETED, ERROR
+}
+
+
+service * with serviceClass
